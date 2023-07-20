@@ -4,7 +4,7 @@ from github import Github, Auth
 import requests
 
 with open("token.txt", "r") as f:
-    TOKEN = f.read()
+    TOKEN = f.readlines()[0].strip()
 
 g = Github(auth=Auth.Token(TOKEN))
 
