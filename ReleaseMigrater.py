@@ -37,7 +37,7 @@ for release in old_repo.get_releases():
     new_msg = release.body + "\n\n<!--\nMigrated from LiteLDev/LiteLoaderBDS. Raw information:\n" + raw_info + "-->"
     new_release = new_repo.create_git_release(tag=release.tag_name, name=release.title, message=new_msg, draft=release.draft, prerelease=release.prerelease)
     for asset in assets:
-        label = assets.label
+        label = asset.label
         if label == None:
             label = ''
         new_release.upload_asset("tmp/" + asset.name, asset.label, asset.content_type, asset.name)
