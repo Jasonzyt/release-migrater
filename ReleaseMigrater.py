@@ -18,7 +18,14 @@ def download(url, name):
 if not os.path.exists("tmp"):
     os.mkdir("tmp")
 
+new_release_names = []
+for release in new_repo.get_releases():
+    new_release_names.append(release.tag_name)
+
 for release in old_repo.get_releases():
+    if release.tag_name in new_release_names:
+        print(f"[INFO] Release {release.tag_name} already exists, skipped.")
+        continue
     print("[INFO] Migrating release: " + release.title)
     assets = []
     raw_info = f"Release: {release.raw_data}\nAssets:\n"
@@ -30,6 +37,9 @@ for release in old_repo.get_releases():
     new_msg = release.body + "\n\n<!--\nMigrated from LiteLDev/LiteLoaderBDS. Raw information:\n" + raw_info + "-->"
     new_release = new_repo.create_git_release(tag=release.tag_name, name=release.title, message=new_msg, draft=release.draft, prerelease=release.prerelease)
     for asset in assets:
+        label = assets.label
+        if label == None:
+            label = ''
         new_release.upload_asset("tmp/" + asset.name, asset.label, asset.content_type, asset.name)
         os.remove("tmp/" + asset.name)
     sleep(30)
