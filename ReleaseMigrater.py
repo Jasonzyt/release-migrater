@@ -34,12 +34,12 @@ for release in old_repo.get_releases():
         download(asset.browser_download_url, asset.name)
         assets.append(asset)
     print(raw_info)
-    new_msg = release.body + "\n\n<!--\nMigrated from LiteLDev/LiteLoaderBDS. Raw information:\n" + raw_info + "-->"
+    new_msg = release.body + "\n\n<!--\nMigrated from LiteLDev/LiteLoaderBDS. Raw information:\n" + raw_info.replace(">", "&gt;") + "-->"
     new_release = new_repo.create_git_release(tag=release.tag_name, name=release.title, message=new_msg, draft=release.draft, prerelease=release.prerelease)
     for asset in assets:
         label = asset.label
         if label == None:
             label = ''
-        new_release.upload_asset("tmp/" + asset.name, asset.label, asset.content_type, asset.name)
+        new_release.upload_asset("tmp/" + asset.name, label, asset.content_type, asset.name)
         os.remove("tmp/" + asset.name)
     sleep(30)
