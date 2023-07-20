@@ -1,0 +1,26 @@
+name: Run
+on: workflow_dispatch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+    
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.8"
+
+      - name: Install Dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          pip3 install -r requirements.txt
+
+      - name: Set Token
+        run: echo ${{ secrets.TOKEN }} > token.txt
+
+      - name: Run
+        run: |
+          python3 ReleaseMigrater.py
